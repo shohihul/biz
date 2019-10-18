@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use App\Models\Destination;
+use File;
 
 class DestinationController extends Controller
 {
@@ -64,10 +65,20 @@ class DestinationController extends Controller
     {
         $destination = Destination::where('id', $id)->first();
 
-        $destination->delete();
+        $file = public_path('assets/img/destination/' . $destination->thumbnail);
 
-        \Session::flash('status', 'Berhasil Menghapus Data');
-        return redirect(route('admin.destination'));
+        if(File::exists($file)){
+
+            File::delete($file);
+            $destination->delete();
+
+            \Session::flash('status', 'Berhasil Menghapus Data');
+            return redirect(route('admin.destination'));
+        }
+        else {
+            \Session::flash('danger', 'File Thumbnail Tidak Ditemukan');
+            return redirect(route('admin.destination'));
+        }
     }
 
     public function edit($id)
@@ -86,6 +97,8 @@ class DestinationController extends Controller
     {
         $destination = Destination::where('id', $id)->first();
 
+        $file = public_path('assets/img/destination/' . $destination->thumbnail);
+
         $validate = [
             'name' => 'required',
             'thumbnail' => 'image',
@@ -94,6 +107,11 @@ class DestinationController extends Controller
 
         $this->validate(request(), $validate);
         if (!empty($request->file('thumbnail'))) {
+
+            if(File::exists($file)){
+                File::delete($file);
+                $destination->delete();
+            }
 
             $thumbnail = $request->file('thumbnail');
             $imageName = $thumbnail->getClientOriginalName();

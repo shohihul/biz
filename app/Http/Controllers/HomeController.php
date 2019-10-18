@@ -3,11 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Destination;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        return view('home.dashboard');
+        $destination = Destination::orderBy('id', 'asc')->get();
+
+        return view('home.dashboard',
+            compact(
+                'destination',
+            ));
     }
 }
