@@ -39,7 +39,7 @@
                     <td>{{$row->description}}</td>
                     <td>{{$row->thumbnail}}</td>
                     <td>
-                        <form action="{{ route('admin.destination.destroy', $row->id)}}" method="post">
+                        <form action="{{ route('admin.destination.delete', $row->id)}}" method="post">
                             @csrf
                             @method('delete')
                             <a href="{{ route('admin.destination.edit', $row->id)}}" class="btn btn-sm btn-success">Edit</a>

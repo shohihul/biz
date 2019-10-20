@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Requests\DestinationStoreRequest;
+use App\Repositories\DestinationRepository;
+
+
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -10,9 +14,11 @@ use File;
 
 class DestinationController extends Controller
 {
-    public function __construct()
+    public function __construct(DestinationRepository $destinationRepository)
     {
         $this->middleware('auth:admin');
+
+        $this->destinationRepository = $destinationRepository;
     }
     public function index()
     {
@@ -36,41 +42,29 @@ class DestinationController extends Controller
             ));
     }
 
-    public function store(Request $request)
+    public function store(DestinationStoreRequest $request)
     {
-        $validate = [
-            'name' => 'required',
-            'thumbnail' => 'required|image',
-            'description' => 'required',
-        ];
-
-        $this->validate(request(), $validate);
-
+        
         $thumbnail = $request->file('thumbnail');
         $imageName = $thumbnail->getClientOriginalName();
-        $thumbnail->move(public_path('assets/img/destination'), $imageName);
 
-        $destination = new Destination();
-        $destination->name = $request->get('name');
-        $destination->description = $request->get('description');
-        $destination->thumbnail = $imageName;
-        $destination->save();
+        $destination = $this->destinationRepository->store($request, $imageName);
+        $this->destinationRepository->fileUpload($destination, $imageName, $thumbnail);
 
         \Session::flash('status', 'Berhasil Menambahkan Destinasi');
         return redirect(route('admin.destination'));
 
     }
 
-    public function destroy($id)
+    public function delete(Destination $destination)
     {
-        $destination = Destination::where('id', $id)->first();
 
         $file = public_path('assets/img/destination/' . $destination->thumbnail);
 
         if(File::exists($file)){
 
-            File::delete($file);
-            $destination->delete();
+            $this->destinationRepository->delete($destination);
+            $this->destinationRepository->deleteFile($destination);
 
             \Session::flash('status', 'Berhasil Menghapus Data');
             return redirect(route('admin.destination'));

@@ -40,8 +40,8 @@ Route::namespace('Admin')->group(function () {
         ->name('admin.destination.create');
     Route::post('/admin/destination/store', 'DestinationController@store')
         ->name('admin.destination.store');
-    Route::delete('/admin/destination/destroy/{id}', 'DestinationController@destroy')
-        ->name('admin.destination.destroy');
+    Route::delete('/admin/destination/delete/{destination}', 'DestinationController@delete')
+        ->name('admin.destination.delete');
     Route::get('/admin/destination/edit/{id}', 'DestinationController@edit')
         ->name('admin.destination.edit');
     Route::put('/admin/destination/update/{id}', 'DestinationController@update')
