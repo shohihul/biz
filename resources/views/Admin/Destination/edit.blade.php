@@ -12,7 +12,7 @@
     <div class="card-body">
         <form class="user" method="post" action="{{ route('admin.destination.update', $destination->id)}}" enctype="multipart/form-data">
         @csrf
-        @method('put')
+        @method('post')
             <h6 class="m-3 font-weight-bold text-basic">Nama Destinasi</h6>
             <div class="form-group">
                 <input type="text" class="form-control form-control-user" name="name" value="{{ $destination->name }}">

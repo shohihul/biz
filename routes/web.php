@@ -44,7 +44,7 @@ Route::namespace('Admin')->group(function () {
         ->name('admin.destination.delete');
     Route::get('/admin/destination/edit/{id}', 'DestinationController@edit')
         ->name('admin.destination.edit');
-    Route::put('/admin/destination/update/{id}', 'DestinationController@update')
+    Route::post('/admin/destination/update/{destination}', 'DestinationController@update')
         ->name('admin.destination.update');
 });
 

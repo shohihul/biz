@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use File;
 
+use App\Http\Requests\DestinationStoreRequest;
+use App\Http\Requests\DestinationUpdateRequest;
+
 class DestinationRepository
 {
     private $model;
@@ -15,8 +18,15 @@ class DestinationRepository
     {
         $this->model = $model;
     }
+    
+    public function get($id)
+    {
+        $destination = $this->model->where('id', $id)->first();
 
-    public function store(Request $request, $imageName)
+        return $destination;
+    }
+
+    public function store(DestinationStoreRequest $request, $imageName)
     {
         DB::beginTransaction();
 
@@ -66,6 +76,22 @@ class DestinationRepository
         try {
             File::delete(public_path('assets/img/destination/' . $destination->thumbnail));
         } catch (\Exception $e) {
+            throw new \Exception($e);
+        }
+    }
+
+    public function update(DestinationUpdateRequest $request, Destination $destination, $imageName)
+    {
+        DB::beginTransaction();
+
+        try {
+            $destination->update(
+                ['name' => $request->name, 'description' => $request->description, 'thumbnail' => $imageName]
+            );
+            DB::commit();
+            return $destination;
+        } catch (\Exception $e) {
+            DB::rollBack();
             throw new \Exception($e);
         }
     }

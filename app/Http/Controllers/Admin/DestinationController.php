@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\DestinationStoreRequest;
+use App\Http\Requests\DestinationUpdateRequest;
 use App\Repositories\DestinationRepository;
 
 
@@ -78,7 +79,7 @@ class DestinationController extends Controller
     public function edit($id)
     {
         $pageSlug ="destination";
-        $destination = Destination::where('id', $id)->first();
+        $destination = $this->destinationRepository->get($id);
 
         return view('admin.destination.edit',
             compact(
@@ -87,34 +88,25 @@ class DestinationController extends Controller
             ));
     }
 
-    public function update(Request $request, $id)
+    public function update(DestinationUpdateRequest $request, Destination $destination)
     {
-        $destination = Destination::where('id', $id)->first();
 
         $file = public_path('assets/img/destination/' . $destination->thumbnail);
+        
 
-        $validate = [
-            'name' => 'required',
-            'thumbnail' => 'image',
-            'description' => 'required',
-        ];
-
-        $this->validate(request(), $validate);
         if (!empty($request->file('thumbnail'))) {
 
             if(File::exists($file)){
-                File::delete($file);
-                $destination->delete();
+
+                $this->destinationRepository->deleteFile($destination);
             }
 
             $thumbnail = $request->file('thumbnail');
             $imageName = $thumbnail->getClientOriginalName();
-            $thumbnail->move(public_path('assets/img/destination'), $imageName);
 
-            $destination->name = $request->get('name');
-            $destination->description = $request->get('description');
-            $destination->thumbnail = $imageName;
-            $destination->save();
+            $destination = $this->destinationRepository->update($request, $destination, $imageName);
+            $this->destinationRepository->fileUpload($destination, $imageName, $thumbnail);
+            
         }
         else {
             
