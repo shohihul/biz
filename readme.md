@@ -16,3 +16,12 @@ Sebuah Web jasa Travel yang menawarkan Tour ke beberapa destinasi di Indonesia
 - Pengunjung bisa melihat destinasi yang tersedia pada halaman awal
 - Admin bisa login menggunakan akun yang sudah terdaftar pada [halaman ini](http://localhost:8000/login/admin).
 - Admin bisa menambah, mengubah, menghapus, dan melihat daftar destinasi pada menu [destinasi](http://localhost:8000/admin/destination).
+
+## Cara Install
+
+- Clone repositori di PC anda.
+- Buka terminal dan masuk kedalam folder biz, dan jalankan "composer install"
+- Buat file ".env" dengan isi yang menyalin dari file ".env.example"
+- Jalankan "php artisan migrate" pada terminal
+- Jalankan "php artisan db:seed --class=AdminTableSeeder && php artisan db:seed --class=DestinationSeederTable" pada terminal
+- Jalakan "php artisan serve" pada terminal, dan buka [http://localhost:8000](http://localhost:8000) pada browser anda
