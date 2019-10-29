@@ -24,9 +24,7 @@ class DestinationUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required',
-            'thumbnail' => 'image',
-            'description' => 'required',
+            'thumbnail' => 'image'
         ];
     }
 }

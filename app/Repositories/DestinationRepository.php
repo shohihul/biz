@@ -42,7 +42,7 @@ class DestinationRepository
         }
     }
 
-    public function fileUpload($destination, $imageName, $thumbnail)
+    public function fileUpload(Destination $destination, $imageName, $thumbnail)
     {
         DB::beginTransaction();
 
@@ -51,7 +51,6 @@ class DestinationRepository
             $destination->thumbnail = $imageName;
             $destination->save();
         } catch (\Exception $e) {
-            DB::rollBack();
             throw new \Exception($e);
         }
     }
@@ -71,13 +70,7 @@ class DestinationRepository
 
     public function deleteFile(Destination $destination)
     {
-        DB::beginTransaction();
-
-        try {
-            File::delete(public_path('assets/img/destination/' . $destination->thumbnail));
-        } catch (\Exception $e) {
-            throw new \Exception($e);
-        }
+        File::delete(public_path('assets/img/destination/' . $destination->thumbnail));
     }
 
     public function update(DestinationUpdateRequest $request, Destination $destination, $imageName)

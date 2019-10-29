@@ -13,7 +13,7 @@ class HomeController extends Controller
 
         return view('home.dashboard',
             compact(
-                'destination',
+                'destination'
             ));
     }
 }

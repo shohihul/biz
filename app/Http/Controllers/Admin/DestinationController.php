@@ -15,6 +15,8 @@ use File;
 
 class DestinationController extends Controller
 {
+    private $destinationRepository;
+
     public function __construct(DestinationRepository $destinationRepository)
     {
         $this->middleware('auth:admin');
@@ -30,7 +32,7 @@ class DestinationController extends Controller
         return view('admin.destination.index',
             compact(
                 'pageSlug',
-                'destination',
+                'destination'
             ));
     }
     
@@ -39,7 +41,7 @@ class DestinationController extends Controller
         $pageSlug ="destination";
         return view('admin.destination.create',
             compact(
-                'pageSlug',
+                'pageSlug'
             ));
     }
 
@@ -84,39 +86,32 @@ class DestinationController extends Controller
         return view('admin.destination.edit',
             compact(
                 'destination',
-                'pageSlug',
+                'pageSlug'
             ));
     }
 
     public function update(DestinationUpdateRequest $request, Destination $destination)
     {
-
-        $file = public_path('assets/img/destination/' . $destination->thumbnail);
-        
-
         if (!empty($request->file('thumbnail'))) {
-
-            if(File::exists($file)){
-
-                $this->destinationRepository->deleteFile($destination);
-            }
 
             $thumbnail = $request->file('thumbnail');
             $imageName = $thumbnail->getClientOriginalName();
 
-            $destination = $this->destinationRepository->update($request, $destination, $imageName);
+            $this->destinationRepository->deleteFile($destination);
+            $this->destinationRepository->update($request, $destination, $imageName);
             $this->destinationRepository->fileUpload($destination, $imageName, $thumbnail);
-            
+
+            \Session::flash('status', 'Berhasil Update Data & Thumbnail');
         }
         else {
             
             $destination->name = $request->get('name');
             $destination->description = $request->get('description');
             $destination->save();
+
+            \Session::flash('status', 'Berhasil Update Data');
         }
-
-        \Session::flash('status', 'Berhasil Update Data');
+        
         return redirect(route('admin.destination'));
-
     }
 }
