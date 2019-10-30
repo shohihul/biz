@@ -14,7 +14,7 @@ class AdminController extends Controller
     public function index()
     {
         $pageSlug ="dashboard";
-        return view('admin.dashboard',
+        return view('Admin.Dashboard',
             compact(
                 'pageSlug',
             ));

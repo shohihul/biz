@@ -29,7 +29,7 @@ class DestinationController extends Controller
 
         $destination = Destination::orderBy('id', 'asc')->get();
 
-        return view('admin.destination.index',
+        return view('Admin.Destination.index',
             compact(
                 'pageSlug',
                 'destination'
@@ -39,7 +39,7 @@ class DestinationController extends Controller
     public function create()
     {
         $pageSlug ="destination";
-        return view('admin.destination.create',
+        return view('Admin.Destination.create',
             compact(
                 'pageSlug'
             ));
@@ -83,7 +83,7 @@ class DestinationController extends Controller
         $pageSlug ="destination";
         $destination = $this->destinationRepository->get($id);
 
-        return view('admin.destination.edit',
+        return view('Admin.Destination.edit',
             compact(
                 'destination',
                 'pageSlug'

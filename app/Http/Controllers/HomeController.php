@@ -11,7 +11,7 @@ class HomeController extends Controller
     {
         $destination = Destination::orderBy('id', 'asc')->get();
 
-        return view('home.dashboard',
+        return view('Home.dashboard',
             compact(
                 'destination'
             ));
